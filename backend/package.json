@@ -1,0 +1,15 @@
+{
+  "name": "enterprise-backend-api",
+  "version": "1.0.0",
+  "description": "Production REST API for Enterprise DevOps Platform",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "prom-client": "^15.1.2"
+  }
+}
