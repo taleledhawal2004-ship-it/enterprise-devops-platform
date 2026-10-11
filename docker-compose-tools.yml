@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Jenkins Server with Docker Socket integration
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: devops-jenkins
+    user: root
+    restart: always
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - //var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - tools_network
+
+  # SonarQube Server for SAST Scan
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: devops-sonarqube
+    restart: always
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - tools_network
+
+networks:
+  tools_network:
+    driver: bridge
+
+volumes:
+  jenkins_home:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
