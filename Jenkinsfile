@@ -41,17 +41,24 @@ pipeline {
                 sh 'echo "Trivy scan passed"'
             }
         }
+
+        stage('Automated Deployment (CD)') {
+            steps {
+                echo 'Deploying application stack using Docker Compose...'
+                sh 'docker compose -f docker-compose.yml up -d'
+            }
+        }
     }
 
     post {
         always {
-            echo 'CI Pipeline run completed.'
+            echo 'CI/CD Pipeline run completed.'
         }
         success {
-            echo 'Build, SAST Analysis, and Containerization Succeeded!'
+            echo 'All stages passed: Built, Scanned, and Deployed Successfully!'
         }
         failure {
-            echo 'CI Pipeline Failed. Please check the logs.'
+            echo 'Pipeline Failed. Please check the logs.'
         }
     }
 }
