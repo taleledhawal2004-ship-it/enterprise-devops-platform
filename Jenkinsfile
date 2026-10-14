@@ -1,10 +1,9 @@
+@"
 pipeline {
     agent any
-
     environment {
         SONARQUBE_SERVER = 'SonarQube-Server'
     }
-
     stages {
         stage('Checkout Code') {
             steps {
@@ -12,11 +11,10 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('SonarQube SAST Analysis') {
             steps {
                 echo 'Starting Static Application Security Testing (SAST)...'
-                withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                withSonarQubeEnv("`${SONARQUBE_SERVER}") {
                     dir('backend') {
                         sh 'echo "Backend SAST check prepared"'
                     }
@@ -26,14 +24,13 @@ pipeline {
                 }
             }
         }
-
         stage('Build Docker Images') {
             steps {
                 echo 'Building production container images...'
-                sh 'docker compose build'
+                sh 'docker build -t devops-backend-api:latest ./backend'
+                sh 'docker build -t devops-frontend-ui:latest ./frontend'
             }
         }
-
         stage('Container Security Scan (Trivy)') {
             steps {
                 echo 'Scanning images for critical vulnerabilities...'
@@ -41,7 +38,6 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             echo 'CI Pipeline run completed.'
@@ -54,3 +50,4 @@ pipeline {
         }
     }
 }
+"@ | Set-Content -Path "Jenkinsfile"
