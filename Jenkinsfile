@@ -44,7 +44,8 @@ pipeline {
 
         stage('Automated Deployment (CD)') {
             steps {
-                echo 'Deploying application stack using Docker Compose...'
+                echo 'Recreating and deploying fresh application containers...'
+                sh 'docker compose -f docker-compose.yml down --remove-orphans || true'
                 sh 'docker compose -f docker-compose.yml up -d'
             }
         }
