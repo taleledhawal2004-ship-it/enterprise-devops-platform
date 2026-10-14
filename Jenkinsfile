@@ -35,13 +35,11 @@ pipeline {
             }
         }
 
-       stage('Container Security Scan (Trivy)') {
+        stage('Container Security Scan (Trivy)') {
             steps {
                 echo 'Scanning images for critical vulnerabilities using Trivy...'
                 sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --severity HIGH,CRITICAL --exit-code 0 devops-backend-api:latest'
                 sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --severity HIGH,CRITICAL --exit-code 0 devops-frontend-ui:latest'
-            }
-        }
             }
         }
 
